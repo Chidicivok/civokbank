@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -56,7 +57,6 @@ public class TransferServiceImplementation implements TransferService {
         this.externalBankAccountRepository = externalBankAccountRepository;
         this.otpService = otpService;
     }
-
 
     // for internal transfers
     @Override
@@ -126,11 +126,15 @@ public class TransferServiceImplementation implements TransferService {
         // credit the source amount
         destinationAccount.setBalance(destinationAccount.getBalance().add(destinationAmount));
 
-        // save new source balance
-        accountRepository.save(sourceAccount);
-
-        // save new destination balance
-        accountRepository.save(destinationAccount);
+        /*
+        * The next 2 lines to save the balance
+        *
+        * However, they can be ignored since we used JPA repository to fetch them,
+        * That means they are managed instances and JPA will detect the change in state and affect the database likewise via Dirty Checking
+        *
+        * */
+//        accountRepository.save(sourceAccount);
+//        accountRepository.save(destinationAccount);
 
         // create transaction
         Transaction transaction = new Transaction();
@@ -324,6 +328,6 @@ public class TransferServiceImplementation implements TransferService {
     }
 
     private String generateTransactionReference() {
-        return "CIV-" + UUID.randomUUID();
+        return "CIV-" + LocalDate.now() + UUID.randomUUID();
     }
 }

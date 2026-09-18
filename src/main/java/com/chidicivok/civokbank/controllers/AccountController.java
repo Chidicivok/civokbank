@@ -6,6 +6,7 @@ import com.chidicivok.civokbank.DTOs.requests.WithdrawalRequest;
 import com.chidicivok.civokbank.DTOs.responses.AccountResponse;
 import com.chidicivok.civokbank.DTOs.responses.TransactionResponse;
 import com.chidicivok.civokbank.services.interfaces.AccountService;
+import com.chidicivok.civokbank.services.interfaces.AdminAuditLogService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,11 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AdminAuditLogService adminAuditLogService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService,  AdminAuditLogService adminAuditLogService ) {
         this.accountService = accountService;
+        this.adminAuditLogService = adminAuditLogService;
     }
 
     @PostMapping("/create-account")
@@ -48,6 +51,10 @@ public class AccountController {
     public ResponseEntity<TransactionResponse> withdraw(Authentication authentication, @PathVariable String accountNumber, @Valid @RequestBody WithdrawalRequest request) {
         return ResponseEntity.ok(accountService.withdraw(authentication.getName(), accountNumber, request));
     }
+
+
+
+
 }
 
 

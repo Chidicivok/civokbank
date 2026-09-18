@@ -8,6 +8,7 @@ import com.chidicivok.civokbank.DTOs.responses.AdminResponse;
 import com.chidicivok.civokbank.DTOs.responses.BankEarningResponse;
 import com.chidicivok.civokbank.DTOs.responses.CustomerResponse;
 import com.chidicivok.civokbank.enums.Currency;
+import com.chidicivok.civokbank.services.interfaces.AdminAuditLogService;
 import com.chidicivok.civokbank.services.interfaces.AdminService;
 import com.chidicivok.civokbank.services.interfaces.BankEarningService;
 import jakarta.validation.Valid;
@@ -26,9 +27,11 @@ public class AdminController {
     private final AdminService adminService;
     private final BankEarningService bankEarningService;
 
-    public AdminController(AdminService adminService, BankEarningService bankEarningService) {
+
+    public AdminController(AdminService adminService, BankEarningService bankEarningService ) {
         this.adminService = adminService;
         this.bankEarningService = bankEarningService;
+
     }
 
     @PostMapping("/create")
@@ -85,4 +88,6 @@ public class AdminController {
 
         return ResponseEntity.ok(bankEarningService.getTotalEarningsByCurrency(currency));
     }
+
+
 }

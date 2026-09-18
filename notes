@@ -1,0 +1,47 @@
+EntityManager - INTERFACE used to make a new entity persistent and managed
+resulting in its insertion in database when the state of the object changes upon synchronization with db
+
+Object obj = repos.findbyid(objId). orElseThrow(): - a managed object using JPA
+
+objEntitymanager.flush() - forces all pending sql statements to execute but does not committ the chnages
+
+objEntityManager.detach(obj) - makes JPA to stop tracking the changes from here on unless invoked again with say .save()
+
+------------------------------------------------------------------------------------------------
+Lazy Fecthing - don't retrieve the data until the application actually needs them
+say we have a many to one relationship
+1 customer - many orders
+
+when we want to get customer's list of orders
+e.g customer = repo.findall()
+JPA will first run 1 query to get that customers
+
+then since the fecth type is lazy it will run seperate queries to fecth for each record
+if we need to get their orders JPA will run select orders ... where id ... for each customer in a loop
+
+so if there are 5 customers
+1 query for all customers , then 1 query each for all 5 customers orders
+hence 1 + N  called the N+1 problem
+
+this can cause performance issues especially with large data
+
+
+possible solutions to N+1 problem
+- Using Distinct and join queries to run 1 query instead of multiple queries
+in the jpa repo
+using @Query annotation
+e.g.
+@Query("SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.orders")
+List<Orders> findAllOrders();
+
+++++++++++++++++++++
+
+another solution is @EntityGraph
+@EntityGraph has attribute so that JPA resolves the join internally itself to find that attribute
+
+e.g.
+@EntityGraph(attributePaths = "orders")
+@Query(SELECT c FROM Customer c)
+List<Customers> getCustomerOrders();
+
+Note: JPQL works with entities not db tables

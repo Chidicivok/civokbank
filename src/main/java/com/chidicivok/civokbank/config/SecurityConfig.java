@@ -1,14 +1,26 @@
 package com.chidicivok.civokbank.config;
 
+import com.chidicivok.civokbank.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     /*
      * SecurityFilterChain is interface at core of Spring Security that contains list of HttpServlet filters
      * Every incoming Http request passes through this chain with each filter performing a specific task
@@ -71,10 +83,14 @@ public class SecurityConfig {
 
         // disable csrf token
         http.csrf(csrf -> csrf.disable())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 // Authorize URLs
                 .authorizeHttpRequests(
                         // check for the customer create request6 and allow everyone to use it
                         auth -> auth.requestMatchers(HttpMethod.POST, "/api/customers/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                                 // grant the special admin its access alone
                                 .requestMatchers(HttpMethod.POST, "/api/admin/create").hasRole("AUTHORIZED_ADMIN")
                                 // now admins of both types using the .hasAnyRole()
@@ -94,36 +110,24 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.GET, "/api/exchange-rates").hasAnyRole("CUSTOMER", "AUTHORIZED_ADMIN", "ADMIN")
 
+                                // audit logs
+
+
                                 .anyRequest()
                                 .authenticated()
                 ).httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form.permitAll());
 
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
 
 }
 
-/*
-*
-* 1. Register Customer
-2. Authenticate
-3. Create Account
-4. Deposit
-5. View own account
-6. Withdraw
-7. Create second customer/account
-8. Internal transfer
-9. FX internal transfer
-10. External bank lookup
-11. External transfer
-12. OTP
-13. Verify external balances
-14. Notifications
-15. Vault
-16. Admin operations
-17. Bank earnings
-18. Audit logs
-19. Negative/security tests
-* */

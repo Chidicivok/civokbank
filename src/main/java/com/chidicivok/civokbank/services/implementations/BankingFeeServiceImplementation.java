@@ -2,6 +2,7 @@ package com.chidicivok.civokbank.services.implementations;
 
 import com.chidicivok.civokbank.enums.CustomerTier;
 import com.chidicivok.civokbank.services.interfaces.BankingFeeService;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,4 +37,6 @@ public class BankingFeeServiceImplementation implements BankingFeeService {
     public BigDecimal calculateExternalFxCommission(BigDecimal convertedAmount) {
         return convertedAmount.multiply(EXTERNAL_FX_COMMISSION_RATE);
     }
+
+
 }

@@ -23,9 +23,7 @@ public class OtpController {
 
     @PostMapping("/verify/{transactionReference}")
     public ResponseEntity<TransactionResponse> verifyOtp(Authentication authentication, @PathVariable String transactionReference, @Valid @RequestBody OtpVerificationRequest request) {
-
         otpService.verifyOtp(authentication.getName(), transactionReference, request);
-
         TransactionResponse response = transferService.completeExternalTransfer(authentication.getName(), transactionReference);
         return ResponseEntity.ok(response);
     }

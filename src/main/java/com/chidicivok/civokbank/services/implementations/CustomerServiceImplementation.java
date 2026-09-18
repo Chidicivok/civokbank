@@ -7,7 +7,6 @@ import com.chidicivok.civokbank.entities.Customer;
 import com.chidicivok.civokbank.enums.CustomerTier;
 import com.chidicivok.civokbank.enums.UserRole;
 import com.chidicivok.civokbank.exceptions.DuplicateResourceException;
-import com.chidicivok.civokbank.exceptions.ResourceNotFoundException;
 import com.chidicivok.civokbank.exceptions.UnAuthorizedPermissionException;
 import com.chidicivok.civokbank.mappers.CustomerMapper;
 import com.chidicivok.civokbank.repositories.CustomerRepository;
@@ -41,6 +40,18 @@ public class CustomerServiceImplementation implements CustomerService {
             throw new DuplicateResourceException("This phone number \"" + request.getPhoneNumber() + "\" is already in use by another customer");
         }
 
+
+
+        /*
+         * when creating objects like this Customer customer = new cutomer();
+         *
+         * note that the object isn't tracked and is just transient still dependent on something else
+         *
+         *when u use a JPA repository to analyze the data it becomes a managed SQL and gives the object a persistence identity
+         *
+         * */
+
+
         // new customer
         Customer newCustomer = new Customer();
 
@@ -66,13 +77,27 @@ public class CustomerServiceImplementation implements CustomerService {
      * Only allow authenticated current customer to access their own account
      * Use Authentication Object to fetch the principal name - email
      * */
+
+
     @Override
     public CustomerResponse updateCustomer(String customerEmail, CustomerUpdateRequest request) {
+
+
+        /*
+         * JPA Repository manages changes in its loaded data via dirty checking
+         *
+         * When you load data using repository e.g.
+         * Customer customer = customerRepository.findByEmail("chidicivok@gmail.com ). orElseThrow();
+         *
+         * the customer becomes a managed JPA object, and it keeps track of this reference initial values automatically,
+         * And tracks changes and auto saves it
+         * */
 
         // Verify that the customer to be edited exits
         Customer customer = customerRepository.findByEmail(customerEmail).orElseThrow(
                 () -> new UnAuthorizedPermissionException("Customer not found with email:\t" + customerEmail.toLowerCase())
         );
+
 
         // collect data
         customer.setFirstName(request.getFirstName());

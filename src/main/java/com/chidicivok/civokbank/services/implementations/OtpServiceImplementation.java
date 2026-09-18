@@ -16,6 +16,7 @@ import com.chidicivok.civokbank.repositories.OtpRepository;
 import com.chidicivok.civokbank.repositories.TransactionRepository;
 import com.chidicivok.civokbank.services.interfaces.NotificationService;
 import com.chidicivok.civokbank.services.interfaces.OtpService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +31,18 @@ public class OtpServiceImplementation implements OtpService {
     private final OtpRepository otpRepository;
     private final TransactionRepository transactionRepository;
     private final NotificationService notificationService;
+    private final PasswordEncoder passwordEncoder;
 
-    public OtpServiceImplementation(OtpRepository otpRepository, TransactionRepository transactionRepository, NotificationService notificationService) {
+    public OtpServiceImplementation(
+            OtpRepository otpRepository,
+            TransactionRepository transactionRepository,
+            NotificationService notificationService,
+            PasswordEncoder passwordEncoder
+    ) {
         this.otpRepository = otpRepository;
         this.transactionRepository = transactionRepository;
         this.notificationService = notificationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -58,7 +66,7 @@ public class OtpServiceImplementation implements OtpService {
         // create otp
         Otp otp = new Otp();
 
-        otp.setOtpCode(otpCode);
+        otp.setOtpCode(passwordEncoder.encode(otpCode));
         otp.setOtpStatus(OtpStatus.PENDING);
         otp.setAttemptCount(0);
         otp.setTransaction(transaction);
@@ -124,8 +132,9 @@ public class OtpServiceImplementation implements OtpService {
             throw new InvalidArgumentException("OTP has expired");
         }
 
+
         // verify this is the otp for this particular transaction
-        if (!otp.getOtpCode().equals(request.getOtpCode())) {
+        if (!passwordEncoder.matches(request.getOtpCode(), otp.getOtpCode())) {
             // increment attempts
             int newAttemptCount = otp.getAttemptCount() + 1;
 

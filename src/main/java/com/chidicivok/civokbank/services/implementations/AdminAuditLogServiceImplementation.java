@@ -11,6 +11,7 @@ import com.chidicivok.civokbank.repositories.AdminAuditLogRepository;
 import com.chidicivok.civokbank.repositories.AdminRepository;
 import com.chidicivok.civokbank.services.interfaces.AdminAuditLogService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,11 +51,12 @@ public class AdminAuditLogServiceImplementation implements AdminAuditLogService 
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<AdminAuditLogResponse> getAllAuditLogs(String adminEmail) {
 
         validateAdmin(adminEmail);
 
-        return adminAuditLogRepository.findAll()
+        return adminAuditLogRepository.findAllWithAdmin()
                 .stream()
                 .map(AdminAuditLogMapper::toResponse)
                 .toList();
@@ -66,7 +68,7 @@ public class AdminAuditLogServiceImplementation implements AdminAuditLogService 
 
         validateAdmin(adminEmail);
 
-        return adminAuditLogRepository.findByAdminAdminId(adminId)
+        return adminAuditLogRepository.findAllByAdminIdWithAdmin(adminId)
                 .stream()
                 .map(AdminAuditLogMapper::toResponse)
                 .toList();

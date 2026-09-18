@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "customers")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor  // JPA needs a no-argument constructor
 @AllArgsConstructor
 @Builder
 public class Customer {
