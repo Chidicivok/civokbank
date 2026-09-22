@@ -1,6 +1,5 @@
 package com.chidicivok.civokbank.entities;
 
-
 import com.chidicivok.civokbank.enums.AccountStatus;
 import com.chidicivok.civokbank.enums.Currency;
 import jakarta.persistence.*;

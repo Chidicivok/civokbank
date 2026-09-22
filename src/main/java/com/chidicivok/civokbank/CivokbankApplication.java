@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CivokbankApplication {
 
 	public static void main(String[] args) {
+
+
 		SpringApplication.run(CivokbankApplication.class, args);
 	}
 

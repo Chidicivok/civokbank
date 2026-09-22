@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AccountStatusUpdateRequest {
-
     @NotNull
     private AccountStatus accountStatus;
 }

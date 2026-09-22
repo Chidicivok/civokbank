@@ -173,7 +173,6 @@ public class AccountServiceImplementation implements AccountService {
         transaction.setSourceAccount(account);
 
         Transaction savedTransaction = transactionRepository.save(transaction);
-
         return TransactionMapper.toResponse(savedTransaction);
     }
 

@@ -50,8 +50,6 @@ public class CustomerServiceImplementation implements CustomerService {
          *when u use a JPA repository to analyze the data it becomes a managed SQL and gives the object a persistence identity
          *
          * */
-
-
         // new customer
         Customer newCustomer = new Customer();
 

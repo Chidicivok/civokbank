@@ -51,8 +51,12 @@ public class ExchangeRateServiceImplementation implements ExchangeRateService {
                 () -> new UnAuthorizedPermissionException("You are not permitted to perform this action")
         );
 
+//        ExchangeRate exchangeRate = exchangeRateRepository.findByFromCurrencyAndToCurrency(request.getFromCurrency(), request.getToCurrency())
+//                .orElseGet(ExchangeRate::new);
+
+
         ExchangeRate exchangeRate = exchangeRateRepository.findByFromCurrencyAndToCurrency(request.getFromCurrency(), request.getToCurrency())
-                .orElseGet(ExchangeRate::new);
+                .orElse(new ExchangeRate());
 
         exchangeRate.setFromCurrency(request.getFromCurrency());
         exchangeRate.setToCurrency(request.getToCurrency());

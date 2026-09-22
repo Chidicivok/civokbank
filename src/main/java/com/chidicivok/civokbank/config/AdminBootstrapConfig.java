@@ -3,6 +3,7 @@ package com.chidicivok.civokbank.config;
 import com.chidicivok.civokbank.entities.Admin;
 import com.chidicivok.civokbank.enums.UserRole;
 import com.chidicivok.civokbank.repositories.AdminRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,18 +57,33 @@ public class AdminBootstrapConfig {
     *
     *---------------------------------------------------------------------------------------------
     * */
+
+    // declare cred
+    @Value("${super.admin.firstname}")
+    private String firstName;
+
+    @Value("${super.admin.lastname}")
+    private String lastName;
+
+    @Value("${super.admin.email}")
+    private String email;
+
+    @Value("${super.admin.password}")
+    private String password;
+
+
     @Bean
     public CommandLineRunner createAuthorizedAdmin(AdminRepository adminRepository, PasswordEncoder passwordEncoder){
 
         return args -> {
-            if(adminRepository.findByEmail("chidicivok@gmail.com").isEmpty()) {
+            if(adminRepository.findByEmail(email).isEmpty()) {
 
                 Admin admin = new Admin();
 
-                admin.setFirstName("Chidi");
-                admin.setLastName("Chigbu");
-                admin.setEmail("chidicivok@gmail.com");
-                admin.setPassword(passwordEncoder.encode("Tata33chidi$"));
+                admin.setFirstName(firstName);
+                admin.setLastName(lastName);
+                admin.setEmail(email);
+                admin.setPassword(passwordEncoder.encode(password));
                 admin.setUserRole(UserRole.AUTHORIZED_ADMIN);
                 admin.setActive(true);
 
