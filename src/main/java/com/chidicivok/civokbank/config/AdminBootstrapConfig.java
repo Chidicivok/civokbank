@@ -71,7 +71,7 @@ public class AdminBootstrapConfig {
     @Value("${super.admin.password}")
     private String password;
 
-
+//h
     @Bean
     public CommandLineRunner createAuthorizedAdmin(AdminRepository adminRepository, PasswordEncoder passwordEncoder){
 
