@@ -2,6 +2,7 @@ package com.chidicivok.civokbank.services.implementations;
 
 import com.chidicivok.civokbank.DTOs.requests.ExternalTransferRequest;
 import com.chidicivok.civokbank.DTOs.requests.InternalTransferRequest;
+import com.chidicivok.civokbank.DTOs.responses.ExchangeRateApiResponse;
 import com.chidicivok.civokbank.DTOs.responses.ExchangeRateResponse;
 import com.chidicivok.civokbank.DTOs.responses.TransactionResponse;
 import com.chidicivok.civokbank.entities.Account;
@@ -89,7 +90,7 @@ public class TransferServiceImplementation implements TransferService {
         // if source is usd - calculate the fee in usd | civok charges in ngn primarily
         if (sourceAccount.getCurrency() == Currency.USD) {
             // get exchange rate from ngn to usd e.g 0.00074- so that if we want to charge 50 ngn we convert 50 ngn to usd
-            ExchangeRateResponse feeExchangeRate = exchangeRateService.getExchangeRate(Currency.NGN, Currency.USD);
+            ExchangeRateApiResponse feeExchangeRate = exchangeRateService.getExchangeRate(Currency.NGN, Currency.USD);
             // convert the transaction fee to usd
             transactionFee = transactionFee.multiply(feeExchangeRate.getRate());
         }
@@ -103,7 +104,7 @@ public class TransferServiceImplementation implements TransferService {
         // foreign exchange transfer
         if (sourceAccount.getCurrency() != destinationAccount.getCurrency()) {
             // get exchange rate
-            ExchangeRateResponse exchangeRate = exchangeRateService.getExchangeRate(sourceAccount.getCurrency(), destinationAccount.getCurrency());
+            ExchangeRateApiResponse exchangeRate = exchangeRateService.getExchangeRate(sourceAccount.getCurrency(), destinationAccount.getCurrency());
             // convert the amount to be transferred using the exchange rate
             BigDecimal convertedAmount = amount.multiply(exchangeRate.getRate());
             // calculate civok bank commission
@@ -191,7 +192,7 @@ public class TransferServiceImplementation implements TransferService {
 
         // if sender is usd
         if (sourceAccount.getCurrency() == Currency.USD) {
-            ExchangeRateResponse feeExchangeRate = exchangeRateService.getExchangeRate(Currency.NGN, Currency.USD);
+            ExchangeRateApiResponse feeExchangeRate = exchangeRateService.getExchangeRate(Currency.NGN, Currency.USD);
             transactionFee = transactionFee.multiply(feeExchangeRate.getRate());
         }
 
@@ -199,7 +200,7 @@ public class TransferServiceImplementation implements TransferService {
 
         // check if foreign exchange
         if (sourceAccount.getCurrency() != destinationAccount.getCurrency()) {
-            ExchangeRateResponse exchangeRate = exchangeRateService.getExchangeRate(sourceAccount.getCurrency(), destinationAccount.getCurrency());
+            ExchangeRateApiResponse exchangeRate = exchangeRateService.getExchangeRate(sourceAccount.getCurrency(), destinationAccount.getCurrency());
             BigDecimal convertedAmount = amount.multiply(exchangeRate.getRate());
             BigDecimal fxCommission = bankingFeeService.calculateExternalFxCommission(convertedAmount);
             destinationAmount = convertedAmount.subtract(fxCommission);
@@ -287,7 +288,7 @@ public class TransferServiceImplementation implements TransferService {
         if (transaction.getSourceCurrency() != transaction.getDestinationCurrency()) {
 
             // get ex rate
-            ExchangeRateResponse exchangeRate = exchangeRateService.getExchangeRate(transaction.getSourceCurrency(), transaction.getDestinationCurrency());
+            ExchangeRateApiResponse exchangeRate = exchangeRateService.getExchangeRate(transaction.getSourceCurrency(), transaction.getDestinationCurrency());
             // convert amount using ex rate
             BigDecimal convertedAmount = transaction.getAmount().multiply(exchangeRate.getRate());
             // calc commission

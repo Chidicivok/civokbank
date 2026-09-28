@@ -88,9 +88,11 @@ public class SecurityConfig {
                 )
                 // Authorize URLs
                 .authorizeHttpRequests(
-                        // check for the customer create request6 and allow everyone to use it
+                        // check for the customer create request and allow everyone to use it
                         auth -> auth.requestMatchers(HttpMethod.POST, "/api/customers/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                                // weather service will be general use so permit everyone
+                                .requestMatchers("/weather/**").permitAll()
                                 // grant the special admin its access alone
                                 .requestMatchers(HttpMethod.POST, "/api/admin/create").hasRole("AUTHORIZED_ADMIN")
                                 // now admins of both types using the .hasAnyRole()

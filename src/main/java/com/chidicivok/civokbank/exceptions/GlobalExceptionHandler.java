@@ -3,34 +3,29 @@ package com.chidicivok.civokbank.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 /*
-* Global Exception Handler Class to help ensure consistent error message throughout the application
-*
-* @RestControllerAdvice - used to define the class as a global exception handler for spring to use
-* */
+ * Global Exception Handler Class to help ensure consistent error message throughout the application
+ *
+ * @RestControllerAdvice - used to define the class as a global exception handler for spring to use
+ * */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /*
-    * @ExceptionHandler - controller level annotation for managing specific exceptions
-    * */
+     * @ExceptionHandler - controller level annotation for managing specific exceptions
+     * */
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiError> handleDuplicateResourceException(DuplicateResourceException exception, HttpServletRequest httpServletRequest) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.name(),
-
+        ApiError apiError = buildApiError(
+                HttpStatus.CONFLICT,
                 exception.getMessage(),
-
-                httpServletRequest.getSession().getId(),
-                httpServletRequest.getAuthType(),
-                httpServletRequest.getServerPort(),
-                httpServletRequest.getRequestURL().toString()
-
+                httpServletRequest
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
@@ -40,62 +35,106 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException exception, HttpServletRequest httpServletRequest) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                HttpStatus.NOT_FOUND.name(),
-
+        ApiError apiError = buildApiError(
+                HttpStatus.NOT_FOUND,
                 exception.getMessage(),
-
-                httpServletRequest.getSession().getId(),
-                httpServletRequest.getAuthType(),
-                httpServletRequest.getServerPort(),
-                httpServletRequest.getRequestURL().toString()
+                httpServletRequest
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(UnAuthorizedPermissionException.class)
     public ResponseEntity<ApiError> handleUnAuthorizedPermissionException(UnAuthorizedPermissionException exception, HttpServletRequest httpServletRequest) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                HttpStatus.FORBIDDEN.name(),
-
+        ApiError apiError = buildApiError(
+                HttpStatus.FORBIDDEN,
                 exception.getMessage(),
-
-                httpServletRequest.getSession().getId(),
-                httpServletRequest.getAuthType(),
-                httpServletRequest.getServerPort(),
-                httpServletRequest.getRequestURL().toString()
+                httpServletRequest
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
 
-
     @ExceptionHandler(InvalidArgumentException.class)
     public ResponseEntity<ApiError> handleInvalidArgumentException(InvalidArgumentException exception, HttpServletRequest httpServletRequest) {
 
-        ApiError apiError = new ApiError(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                HttpStatus.BAD_REQUEST.name(),
-
+        ApiError apiError = buildApiError(
+                HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
-
-                httpServletRequest.getSession().getId(),
-                httpServletRequest.getAuthType(),
-                httpServletRequest.getServerPort(),
-                httpServletRequest.getRequestURL().toString()
+                httpServletRequest
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingRequestParameter(MissingServletRequestParameterException exception, HttpServletRequest httpServletRequest) {
 
+        String message = "Required parameter '" + exception.getParameterName() + "' is missing";
+
+        ApiError apiError = buildApiError(
+                HttpStatus.BAD_REQUEST,
+                message,
+                httpServletRequest
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest httpServletRequest) {
+
+        String message = "Invalid value for parameter '" + exception.getName() + "'";
+
+        ApiError apiError = buildApiError(
+                HttpStatus.BAD_REQUEST,
+                message,
+                httpServletRequest
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(ExternalApiFailureException.class)
+    public ResponseEntity<ApiError> handleWeatherServiceUnavailable(ExternalApiFailureException exception, HttpServletRequest httpServletRequest) {
+
+        ApiError apiError = buildApiError(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                exception.getMessage(),
+                httpServletRequest
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleUnexpectedException(Exception exception, HttpServletRequest httpServletRequest) {
+
+        ApiError apiError = buildApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred",
+                httpServletRequest
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    private ApiError buildApiError(HttpStatus status, String message, HttpServletRequest httpServletRequest) {
+
+        return new ApiError(
+                status.value(),
+                status.getReasonPhrase(),
+                status.name(),
+                message,
+                httpServletRequest.getRequestURI()
+        );
+    }
 }

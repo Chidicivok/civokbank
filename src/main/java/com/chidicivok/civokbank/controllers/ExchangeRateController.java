@@ -1,6 +1,7 @@
 package com.chidicivok.civokbank.controllers;
 
 import com.chidicivok.civokbank.DTOs.requests.ExchangeRateUpdateRequest;
+import com.chidicivok.civokbank.DTOs.responses.ExchangeRateApiResponse;
 import com.chidicivok.civokbank.DTOs.responses.ExchangeRateResponse;
 import com.chidicivok.civokbank.enums.Currency;
 import com.chidicivok.civokbank.services.interfaces.ExchangeRateService;
@@ -20,18 +21,18 @@ public class ExchangeRateController {
     }
 
     @GetMapping
-    public ResponseEntity<ExchangeRateResponse> getExchangeRate(@RequestParam Currency fromCurrency, @RequestParam Currency toCurrency) {
+    public ResponseEntity<ExchangeRateApiResponse> getExchangeRate(@RequestParam Currency fromCurrency, @RequestParam Currency toCurrency) {
 
-        ExchangeRateResponse response = exchangeRateService.getExchangeRate(fromCurrency, toCurrency);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("set-exhange-rate")
-    public ResponseEntity<ExchangeRateResponse> setExchangeRate(Authentication authentication, @Valid @RequestBody ExchangeRateUpdateRequest request) {
-
-        ExchangeRateResponse response = exchangeRateService.setExchangeRate(authentication.getName(), request);
+        ExchangeRateApiResponse response = exchangeRateService.getExchangeRate(fromCurrency, toCurrency);
 
         return ResponseEntity.ok(response);
     }
+
+//    @PutMapping("set-exhange-rate")
+//    public ResponseEntity<ExchangeRateResponse> setExchangeRate(Authentication authentication, @Valid @RequestBody ExchangeRateUpdateRequest request) {
+//
+//        ExchangeRateResponse response = exchangeRateService.setExchangeRate(authentication.getName(), request);
+//
+//        return ResponseEntity.ok(response);
+//    }
 }
