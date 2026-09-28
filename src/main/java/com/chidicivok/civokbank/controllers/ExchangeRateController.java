@@ -1,13 +1,9 @@
 package com.chidicivok.civokbank.controllers;
 
-import com.chidicivok.civokbank.DTOs.requests.ExchangeRateUpdateRequest;
 import com.chidicivok.civokbank.DTOs.responses.ExchangeRateApiResponse;
-import com.chidicivok.civokbank.DTOs.responses.ExchangeRateResponse;
 import com.chidicivok.civokbank.enums.Currency;
 import com.chidicivok.civokbank.services.interfaces.ExchangeRateService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
