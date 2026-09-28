@@ -71,34 +71,10 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ApiError> handleMissingRequestParameter(MissingServletRequestParameterException exception, HttpServletRequest httpServletRequest) {
-
-        String message = "Required parameter '" + exception.getParameterName() + "' is missing";
-
-        ApiError apiError = buildApiError(
-                HttpStatus.BAD_REQUEST,
-                message,
-                httpServletRequest
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-    }
 
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest httpServletRequest) {
 
-        String message = "Invalid value for parameter '" + exception.getName() + "'";
 
-        ApiError apiError = buildApiError(
-                HttpStatus.BAD_REQUEST,
-                message,
-                httpServletRequest
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-    }
 
 
     @ExceptionHandler(ExternalApiFailureException.class)
