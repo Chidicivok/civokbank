@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NotificationService {
 
-    NotificationResponse createNotification(Customer customer, NotificationType notificationType, String message);
+    void createNotification(Customer customer, NotificationType notificationType, String message);
 
     List<NotificationResponse> getCustomerNotifications(String customerEmail);
 }

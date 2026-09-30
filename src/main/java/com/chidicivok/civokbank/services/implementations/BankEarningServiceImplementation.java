@@ -23,7 +23,7 @@ public class BankEarningServiceImplementation implements BankEarningService {
     }
 
     @Override
-    public BankEarningResponse recordEarning(String transactionReference, EarningType earningType, BigDecimal amount, Currency currency) {
+    public void recordEarning(String transactionReference, EarningType earningType, BigDecimal amount, Currency currency) {
 
         BankEarning bankEarning = new BankEarning();
 
@@ -34,7 +34,7 @@ public class BankEarningServiceImplementation implements BankEarningService {
 
         BankEarning savedEarning = bankEarningRepository.save(bankEarning);
 
-        return BankEarningMapper.toResponse(savedEarning);
+        BankEarningMapper.toResponse(savedEarning);
     }
 
 

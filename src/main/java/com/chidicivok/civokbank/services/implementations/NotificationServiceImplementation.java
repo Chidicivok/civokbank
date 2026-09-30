@@ -26,7 +26,7 @@ public class NotificationServiceImplementation implements NotificationService {
 
 
     @Override
-    public NotificationResponse createNotification(Customer customer, NotificationType notificationType, String message) {
+    public void createNotification(Customer customer, NotificationType notificationType, String message) {
 
         Notification notification = new Notification();
 
@@ -36,7 +36,7 @@ public class NotificationServiceImplementation implements NotificationService {
 
         Notification savedNotification = notificationRepository.save(notification);
 
-        return NotificationMapper.toResponse(savedNotification);
+        NotificationMapper.toResponse(savedNotification);
     }
 
 

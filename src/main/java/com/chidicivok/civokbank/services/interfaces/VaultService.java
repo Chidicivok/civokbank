@@ -13,5 +13,5 @@ public interface VaultService {
 
     List<VaultResponse> getVaultsByAccount(String customerEmail, String accountNumber);
 
-    VaultResponse releaseMaturedVault(Long vaultId);
+    VaultResponse releaseMaturedVault(String customerEmail, Long vaultId);
 }

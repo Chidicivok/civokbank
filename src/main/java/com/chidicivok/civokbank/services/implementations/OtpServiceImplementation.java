@@ -1,7 +1,6 @@
 package com.chidicivok.civokbank.services.implementations;
 
 import com.chidicivok.civokbank.DTOs.requests.OtpVerificationRequest;
-import com.chidicivok.civokbank.DTOs.responses.OtpResponse;
 import com.chidicivok.civokbank.entities.Customer;
 import com.chidicivok.civokbank.entities.Otp;
 import com.chidicivok.civokbank.entities.Transaction;
@@ -49,7 +48,7 @@ public class OtpServiceImplementation implements OtpService {
     // GENERATE OTP
     @Override
     @Transactional
-    public OtpResponse generateOtp(String transactionReference) {
+    public void generateOtp(String transactionReference) {
 
         // find transaction needing otp
         Transaction transaction = transactionRepository.findByTransactionReference(transactionReference).orElseThrow(
@@ -79,7 +78,7 @@ public class OtpServiceImplementation implements OtpService {
         // notification for that customer
         notificationService.createNotification(customer, NotificationType.OTP, "Your Civok OTP is " + otpCode);
 
-        return OtpMapper.toResponse(savedOtp);
+        OtpMapper.toResponse(savedOtp);
     }
 
 

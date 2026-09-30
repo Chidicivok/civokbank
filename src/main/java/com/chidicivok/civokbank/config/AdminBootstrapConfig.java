@@ -9,56 +9,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 /*
-* Create the first Admin to store in database
+* This class instructs Spring to check if the original admin exits and if they do not exist, to create that admin
+*
 * @Configuration - Class level annotation used to tell Spring that the class can be used by Spring IoC for Bean definitions and creations
 * */
 @Configuration
 public class AdminBootstrapConfig {
 
     /*
-    * CommandLineRunner interface - allows execution of code after application context is initialized but before application starts serving requests
-    * Methods using CommandLineRunner must return args
-    * Classes implementing CommandLineRunner must override the run(String... args)
-    * Multiple CommandLineRunner classes and methods may be created and then ordered using the @Order(n) where n can be numerical value for the order of execution
-    * Bean is an Object that is instantiated and managed by SpringBoot Inversion of Control container
-    * It makes use of the @Bean annotation - a Method Level annotation
-    * Inversion of Control - ???
-    * ----------------------------------------------------------------------------------------------
-    * @SpringBootApplication
-    * public static void main(String[] args) {
-    *       SpringApplication.run(DemoApplication.class, args);
-    *       System.out.println("This is the main application method");
-    * }
+    * Declare global variables to be used by this class
     *
-    * @Order(3)
-    * @Bean
-    * public CommandLineRunner doStuff() {
-    *       return args -> {
-    *               System.out.println("Command Line runner method created first but given an order of 3");
-    *       };
-    * }
-    *
-    *
-    * @Order(1)
-    * @Bean
-    * public CommandLineRunner doStuffAgain() {
-    *       return args -> {
-    *               System.out.println("Command Line runner method created second but given an order of 1");
-    *       };
-    * }
-    *
-    * }
-    *
-    * =============================OUTPUT====================================
-    * Command Line runner method created second but given an order of 1
-    * Command Line runner method created first but given an order of 3
-    * This is the main application method
-    * ========================================================================
-    *
-    *---------------------------------------------------------------------------------------------
+    * @Value is used to direct spring that the actual values are not in code itself
+    * This points Spring to look at the application configuration to fetch the values
     * */
-
-    // declare cred
     @Value("${super.admin.firstname}")
     private String firstName;
 
@@ -70,6 +33,55 @@ public class AdminBootstrapConfig {
 
     @Value("${super.admin.password}")
     private String password;
+
+    /*
+     * CommandLineRunner interface - allows execution of code after application context is initialized but before application starts serving requests
+     *
+     * Methods using CommandLineRunner must return args
+     *
+     * Multiple CommandLineRunner classes and methods may be created and then ordered using the @Order(n) where n can be numerical value for the order of execution
+     *
+     * Bean is an Object that is instantiated and managed by SpringBoot Inversion of Control container
+     *
+     * It makes use of the @Bean annotation - a Method Level annotation
+     *
+     * Inversion of Control - is the feature that allows spring to manage object creation and handling by itself
+     * ----------------------------------------------------------------------------------------------
+     * @SpringBootApplication
+     * public static void main(String[] args) {
+     *       SpringApplication.run(DemoApplication.class, args);
+     *       System.out.println("This is the main application method");
+     * }
+     *
+     * @Order(3)
+     * @Bean
+     * public CommandLineRunner doStuff() {
+     *       return args -> {
+     *               System.out.println("Command Line runner method created first but given an order of 3");
+     *       };
+     * }
+     *
+     *
+     * @Order(1)
+     * @Bean
+     * public CommandLineRunner doStuffAgain() {
+     *       return args -> {
+     *               System.out.println("Command Line runner method created second but given an order of 1");
+     *       };
+     * }
+     *
+     * }
+     *
+     * =============================OUTPUT====================================
+     * Command Line runner method created second but given an order of 1
+     * Command Line runner method created first but given an order of 3
+     * This is the main application method
+     * ========================================================================
+     *
+     *---------------------------------------------------------------------------------------------
+     * */
+
+
 
 //h
     @Bean

@@ -2,7 +2,6 @@ package com.chidicivok.civokbank.services.implementations;
 
 import com.chidicivok.civokbank.DTOs.responses.AdminAuditLogResponse;
 import com.chidicivok.civokbank.entities.Admin;
-import com.chidicivok.civokbank.entities.AdminAuditLog;
 import com.chidicivok.civokbank.enums.UserRole;
 import com.chidicivok.civokbank.exceptions.ResourceNotFoundException;
 import com.chidicivok.civokbank.exceptions.UnAuthorizedPermissionException;
@@ -13,8 +12,6 @@ import com.chidicivok.civokbank.services.interfaces.AdminAuditLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,27 +23,6 @@ public class AdminAuditLogServiceImplementation implements AdminAuditLogService 
     public AdminAuditLogServiceImplementation(AdminAuditLogRepository adminAuditLogRepository, AdminRepository adminRepository) {
         this.adminAuditLogRepository = adminAuditLogRepository;
         this.adminRepository = adminRepository;
-    }
-
-    @Override
-    public void logAction(
-            Admin admin,
-            String action,
-            String targetUser,
-            String targetAccountNumber,
-            String reason,
-            LocalDate date) {
-
-        AdminAuditLog auditLog = new AdminAuditLog();
-
-        auditLog.setAdmin(admin);
-        auditLog.setAction(action);
-        auditLog.setTargetUser(targetUser);
-        auditLog.setTargetAccountNumber(targetAccountNumber);
-        auditLog.setReason(reason);
-        auditLog.setCreatedAt(LocalDateTime.now());
-
-         adminAuditLogRepository.save(auditLog);
     }
 
 

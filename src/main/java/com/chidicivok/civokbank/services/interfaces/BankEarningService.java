@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BankEarningService {
 
-    BankEarningResponse recordEarning(String transactionReference, EarningType earningType, BigDecimal amount, Currency currency);
+    void recordEarning(String transactionReference, EarningType earningType, BigDecimal amount, Currency currency);
 
     List<BankEarningResponse> getAllEarnings();
 

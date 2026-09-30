@@ -2,14 +2,17 @@ package com.chidicivok.civokbank.services.implementations;
 
 import com.chidicivok.civokbank.DTOs.requests.CustomerCreateRequest;
 import com.chidicivok.civokbank.DTOs.requests.CustomerUpdateRequest;
+import com.chidicivok.civokbank.DTOs.responses.AbstractEmailVerifierApiResponse;
 import com.chidicivok.civokbank.DTOs.responses.CustomerResponse;
 import com.chidicivok.civokbank.entities.Customer;
 import com.chidicivok.civokbank.enums.CustomerTier;
 import com.chidicivok.civokbank.enums.UserRole;
 import com.chidicivok.civokbank.exceptions.DuplicateResourceException;
+import com.chidicivok.civokbank.exceptions.InvalidArgumentException;
 import com.chidicivok.civokbank.exceptions.UnAuthorizedPermissionException;
 import com.chidicivok.civokbank.mappers.CustomerMapper;
 import com.chidicivok.civokbank.repositories.CustomerRepository;
+import com.chidicivok.civokbank.security.EmailVerificationService;
 import com.chidicivok.civokbank.services.interfaces.CustomerService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,13 @@ public class CustomerServiceImplementation implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailVerificationService emailVerificationService;
 
     // use injection for final instance variables
-    public CustomerServiceImplementation(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    public CustomerServiceImplementation(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, EmailVerificationService emailVerificationService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailVerificationService = emailVerificationService;
     }
 
     // allow all users to create account as customer
@@ -40,6 +45,11 @@ public class CustomerServiceImplementation implements CustomerService {
             throw new DuplicateResourceException("This phone number \"" + request.getPhoneNumber() + "\" is already in use by another customer");
         }
 
+
+
+        boolean isEmailValid = emailVerificationService.isEmailValid(request.getEmail());
+
+        if(!isEmailValid) throw new InvalidArgumentException("The email address is not valid");
 
 
         /*

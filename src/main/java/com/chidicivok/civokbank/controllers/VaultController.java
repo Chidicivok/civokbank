@@ -39,4 +39,11 @@ public class VaultController {
         List<VaultResponse> responses = vaultService.getVaultsByAccount(authentication.getName(), accountNumber);
         return ResponseEntity.ok(responses);
     }
+
+    @PostMapping("/account/{vaultId}")
+    public ResponseEntity<VaultResponse> releaseMaturedVault(Authentication authentication, @PathVariable Long vaultId) {
+        VaultResponse responses = vaultService.releaseMaturedVault(authentication.getName(), vaultId);
+        return ResponseEntity.ok(responses);
+    }
+
 }

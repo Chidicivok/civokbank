@@ -4,6 +4,7 @@ import com.chidicivok.civokbank.entities.Admin;
 import com.chidicivok.civokbank.entities.Customer;
 import com.chidicivok.civokbank.repositories.AdminRepository;
 import com.chidicivok.civokbank.repositories.CustomerRepository;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,9 +31,9 @@ public class CustomerUserDetailsService implements UserDetailsService {
         this.adminRepository = adminRepository;
     }
 
-
+    @NullMarked
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public  UserDetails loadUserByUsername ( String email) throws UsernameNotFoundException {
 
         // find if a customer else set object to empty
         Customer customer = customerRepository.findByEmail(email).orElse(null);

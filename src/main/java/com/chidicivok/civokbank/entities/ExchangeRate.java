@@ -41,8 +41,5 @@ public class ExchangeRate {
         updatedAt = LocalDateTime.now();
     }
 
-    public interface ExchangeRateInterface {
-        ExchangeRate obj = new ExchangeRate();
-    }
 
 }

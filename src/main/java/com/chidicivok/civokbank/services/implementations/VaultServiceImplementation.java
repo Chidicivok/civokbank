@@ -114,7 +114,7 @@ public class VaultServiceImplementation implements VaultService {
 
     @Override
     @Transactional
-    public VaultResponse releaseMaturedVault(Long vaultId) {
+    public VaultResponse releaseMaturedVault(String customerEmail, Long vaultId) {
 
         Vault vault = findVault(vaultId);
 

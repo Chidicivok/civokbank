@@ -3,7 +3,6 @@ package com.chidicivok.civokbank.services.implementations;
 import com.chidicivok.civokbank.DTOs.requests.ExternalTransferRequest;
 import com.chidicivok.civokbank.DTOs.requests.InternalTransferRequest;
 import com.chidicivok.civokbank.DTOs.responses.ExchangeRateApiResponse;
-import com.chidicivok.civokbank.DTOs.responses.ExchangeRateResponse;
 import com.chidicivok.civokbank.DTOs.responses.TransactionResponse;
 import com.chidicivok.civokbank.entities.Account;
 import com.chidicivok.civokbank.entities.ExternalBankAccount;

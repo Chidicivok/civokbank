@@ -21,7 +21,6 @@ public class AdminAuditLogController {
 
     @GetMapping
     public ResponseEntity<List<AdminAuditLogResponse>> getAllAuditLogs(Authentication authentication) {
-
         List<AdminAuditLogResponse> logs = adminAuditLogService.getAllAuditLogs(authentication.getName());
         return ResponseEntity.ok(logs);
     }
